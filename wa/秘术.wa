@@ -1,0 +1,7 @@
+local e = aura_env.region
+local frame = CreateFrame("Button", "WA_TargetFriendplayerThenUse", e, "InsecureActionButtonTemplate", "InSecureHandlerBaseTemplate")
+frame:EnableMouse(true)
+frame:SetAllPoints()
+frame:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+frame:SetAttribute("type", "macro")
+frame:SetAttribute("macrotext", "/targetFriendPlayer\n/use 14")

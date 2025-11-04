@@ -1,0 +1,96 @@
+local LIBRARY_NAME = "ES"
+local Library = _G[LIBRARY_NAME]
+
+if not Library then
+    Library = CreateFrame("Frame", LIBRARY_NAME)
+
+    function Library:Initialize()
+        self:RegisterEvent("CHAT_MSG_LOOT")
+        self:RegisterEvent("CHAT_MSG_ADDON")
+        Library:CreateButtons()
+        print("厨房载入完成")
+    end
+
+    function Library:CreateButtons()
+        aura_env.region.clickMe = aura_env.region.clickMe or CreateFrame("Button", nil, aura_env.region)
+        aura_env.region.clickMe:SetAllPoints()
+        aura_env.region.clickMe:SetScript("OnClick", function()
+            self:QieRou()
+        end)
+    end
+
+    function Library:OnEvent(event, ...)
+        local arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17 = ...;
+        if event == "CHAT_MSG_LOOT" then
+            -- print("CHAT_MSG_LOOT")
+            --切肉
+            if (string.find(arg1, "你获得了") and (string.find(arg1, "分切的肉排"))) then
+                local itemindex = {}
+                for i = 0, 5, 1 do
+                    -- print(C_Container.GetBagName(i))
+                    for j = 1, C_Container.GetContainerNumSlots(i), 1 do
+                        local containerInfo = C_Container.GetContainerItemInfo(i, j)
+                        if containerInfo then
+                            local item = ItemLocation:CreateFromBagAndSlot(i, j)
+                            if item:IsValid() and C_Item.GetItemID(item) == 223512 then
+                                table.insert(itemindex, {
+                                    bagindex = i,
+                                    slotindex = j
+                                })
+                            end
+                        end
+                    end
+                end
+
+                if #itemindex >= 2 then
+                    C_Container.PickupContainerItem(itemindex[2].bagindex, itemindex[2].slotindex)
+                    C_Container.PickupContainerItem(itemindex[1].bagindex, itemindex[1].slotindex)
+                end
+            end
+            --搓慷
+            if (string.find(arg1, "你制造了") and (string.find(arg1, "贝雷达尔之慷"))) then
+                local b = ProfessionsFrame.CraftingPage.CreateAllButton;
+                if b:IsVisible() then
+                    b:Click()
+                end
+            end
+        elseif event == "LOADING_SCREEN_DISABLED" then
+        elseif event == "LOADING_SCREEN_ENABLED" then
+        end
+
+        if event == "CHAT_MSG_ADDON" then
+            local prefix = "EndlessSeptember"
+            if prefix == arg1 then
+                print(event)
+                print(arg2)
+                if arg2 == "女王温室菜馆测试" then
+                    Library:QieRou()
+                end
+
+                -- local result = Split(arg2, "=")
+                -- -- print("r1:"..result[1])
+                -- -- print("r2:"..result[2])
+            end
+        end
+    end
+
+    function Library:QieRou()
+
+        local not_found = true
+        for i = 0, 5, 1 do
+            for j = 1,60, 1 do
+                -- local containerInfo = C_Container.GetContainerItemInfo(i, j)
+                -- if containerInfo then
+                    local item = ItemLocation:CreateFromBagAndSlot(i, j)
+                    if not_found and item:IsValid() and C_Item.GetItemID(item) == 223512 then
+                        C_TradeSkillUI.CraftSalvage(445118, 100000, item)
+                        not_found = false
+                    end
+                -- end
+            end
+        end
+    end
+
+    Library:SetScript("OnEvent", function(self, ...) self:OnEvent(...) end)
+end
+Library:Initialize()

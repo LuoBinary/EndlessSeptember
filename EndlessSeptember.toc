@@ -1,0 +1,31 @@
+## Interface: 110205
+## Title: EndlessSeptember
+## Notes: 女王温室厨房：一键切肉/片鱼/搓慷，一键转移肉排/胡椒/粉尘，价格数据统计。
+## Author: 无尽九月-白银之手
+## Version: V1.0
+## SavedVariables: ESDB,ES_NIU,ES_ROU,ES_KANG,ES_CC,ES_CC_ENABLE
+
+# libs
+libs\lib.xml
+
+# init
+init.lua
+
+# i18n
+locales.xml
+
+# pre
+Option.lua
+Constant.lua
+Tools.lua
+
+# Core
+ESDB.lua
+Kitchen.lua
+Bag.lua
+Auction.lua
+Msg.lua
+Map.lua
+MPlus.lua
+UI.lua
+EndlessSeptember.lua
